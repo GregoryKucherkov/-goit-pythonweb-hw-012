@@ -11,3 +11,9 @@ Limit the number of requests to the user's /me route.
 Enable CORS for your REST API.
 
 Implement the ability to update the user's avatar (use the Cloudinary service).
+
+docker compose -d up
+
+alembic head
+##tests
+poetry run pytest --cov=src tests/

@@ -25,8 +25,7 @@ migrations/
 # FastAPI specific
 # If you are using static or media files
 /static/
-# You may also ignore test-related folders
-/tests/
+
 
 # IDE-related files
 .vscode/

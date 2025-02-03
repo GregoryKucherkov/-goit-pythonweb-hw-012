@@ -107,11 +107,11 @@ async def login_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     # if you want user won't be able to login without email confirmation
-    # if not user.confirmed:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Email is not confirmed",
-    #     )
+    if not user.confirmed:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email is not confirmed",
+        )
 
     # Generate JWT
     access_token = await create_access_token(data={"sub": user.username})
