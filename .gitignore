@@ -1,0 +1,55 @@
+.env
+
+# Python-related
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+*.db
+*.sqlite3
+
+# Poetry
+.poetry/
+*.toml
+poetry.lock
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Alembic migration files
+migrations/
+
+# FastAPI specific
+# If you are using static or media files
+/static/
+# You may also ignore test-related folders
+/tests/
+
+# IDE-related files
+.vscode/
+.idea/
+
+# Python test and coverage tools
+.coverage
+.coverage.*
+nosetests.xml
+pytest*.xml
+*.cover
+*.hypothesis/
+
+# FastAPI's auto-generated docs (if you don't want them versioned)
+openapi.json
+openapi.yaml
+
+# Pydantic, if you use generated models (optional)
+*.pydantic/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Other system files
+.DS_Store
+Thumbs.db
