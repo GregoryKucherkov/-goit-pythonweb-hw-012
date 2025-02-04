@@ -207,13 +207,12 @@ async def get_curent_user(
     except JWTError as e:
         raise credentials_exception
 
-    user_cached = r.get(f"user:{username}")
-    if user_cached:
-        #     # If user is cached, load from cache and convert to User object
-        #     # user_data = json.loads(user_cached)
-        #     # user_data["role"] = UserRole(user_data["role"])
-        #     # return User(**user_data) #User object
-        return json.loads(user_cached)
+    # user_cached = r.get(f"user:{username}")
+    # if user_cached:
+    #     # If user is cached, load from cache and convert to User object
+    #     user_data = json.loads(user_cached)
+    #     return User(**user_data)  # User object
+    # return json.loads(user_cached)
 
     user_service = UserService(db)
 

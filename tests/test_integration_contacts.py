@@ -6,7 +6,6 @@ test_contact = {
     "lastname": "last",
     "email": "test@gmail.com",
     "phone": "096-123-45-67",
-    # "birthdate": date(2011, 1, 12).isoformat(),
     "birthdate": str(date(2001, 12, 12)),
     "notes": "some_note",
 }

@@ -3,7 +3,7 @@ from sqlalchemy import select, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.models import Contact, User
-from src.schemas import ContactBase, ContactUpdate
+from src.schemas import ContactBase, ContactUpdate, User as PydentUser
 from datetime import date
 from src.repo.users import UserRepo
 
@@ -62,9 +62,9 @@ class ContactRepo:
             A Contact with the assigned attributes.
         """
 
-        if isinstance(user, dict):  # If it's a dict (from cache)
+        if isinstance(user, PydentUser):  # If it's a dict (from cache)
             user_repo = UserRepo(self.db)
-            user = await user_repo.get_user_by_email(user["email"])
+            user = await user_repo.get_user_by_email(user.email)
 
         contact = Contact(**body.model_dump(exclude_unset=True), user=user)
 
