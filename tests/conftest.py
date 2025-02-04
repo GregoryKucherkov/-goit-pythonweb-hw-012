@@ -1,4 +1,5 @@
 import asyncio
+from src.database.models import UserRole
 
 import pytest
 import pytest_asyncio
@@ -44,6 +45,7 @@ def init_models_wrap():
                 hashed_password=hash_password,
                 confirmed=True,
                 avatar="<https://twitter.com/gravatar>",
+                role=UserRole.ADMIN,
             )
             session.add(current_user)
             await session.commit()

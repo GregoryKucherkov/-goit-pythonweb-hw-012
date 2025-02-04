@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, UTC
 from typing import Optional, Literal
 
+
 from fastapi import Depends, HTTPException, status
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
@@ -10,7 +11,7 @@ from jose import jwt, JWTError, ExpiredSignatureError
 from src.schemas import User
 
 from src.database.db import get_db
-from src.database.models import UserRole
+from src.database.models import UserRole, User as UserSQLAlchemy
 from src.config.config import settings
 from src.services.users import UserService
 
@@ -208,10 +209,10 @@ async def get_curent_user(
 
     user_cached = r.get(f"user:{username}")
     if user_cached:
-        # If user is cached, load from cache and convert to User object
-        # user_data = json.loads(user_cached)
-        # user = parse_obj_as(User, user_data)
-        # return user
+        #     # If user is cached, load from cache and convert to User object
+        #     # user_data = json.loads(user_cached)
+        #     # user_data["role"] = UserRole(user_data["role"])
+        #     # return User(**user_data) #User object
         return json.loads(user_cached)
 
     user_service = UserService(db)

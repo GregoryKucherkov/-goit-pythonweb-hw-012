@@ -23,7 +23,14 @@ def test_signup(client, monkeypatch):
     assert data["username"] == user_data["username"]
     assert data["email"] == user_data["email"]
     assert "hashed_password" not in data
+    mock_send_email.assert_called_once()
+    assert "id" in data
     assert "avatar" in data
+    assert isinstance(data["id"], int)
+    response = client.post("/api/auth/register", json=user_data)
+    assert response.status_code == 409, response.text
+    data = response.json()
+    assert data["detail"] == "User with that email is already exists"
 
 
 @pytest.mark.asyncio
@@ -34,6 +41,7 @@ async def test_repeat_signup(client, monkeypatch):
     assert response.status_code == 409, response.text
     data = response.json()
     assert data["detail"] == "User with that email is already exists"
+    assert "detail" in data
 
     # async with TestingSessionLocal() as session:
     #     current_user = await session.execute(
@@ -78,6 +86,10 @@ async def test_login(client):
     data = response.json()
     assert "access_token" in data
     assert "token_type" in data
+
+    assert data["token_type"] == "bearer", "Expected token type to be 'bearer'"
+    assert isinstance(data["access_token"], str), "Access token should be a string"
+    assert len(data["access_token"]) > 10, "Access token seems too short"
 
 
 def test_wrong_password_login(client):

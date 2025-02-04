@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.models import Contact, User
 from src.schemas import ContactBase, ContactUpdate
 from datetime import date
+from src.repo.users import UserRepo
 
 
 class ContactRepo:
@@ -60,6 +61,10 @@ class ContactRepo:
         Returns:
             A Contact with the assigned attributes.
         """
+
+        if isinstance(user, dict):  # If it's a dict (from cache)
+            user_repo = UserRepo(self.db)
+            user = await user_repo.get_user_by_email(user["email"])
 
         contact = Contact(**body.model_dump(exclude_unset=True), user=user)
 
@@ -138,21 +143,7 @@ class ContactRepo:
             .offset(skip)
             .limit(limit)
         )
-        # option2
-        # req = (
-        #     select(Contact)
-        #     .filter_by(user=user)
-        #     .where(
-        #         or_(
-        #             Contact.name.ilike(f"%{text}%"),
-        #             Contact.lastname.ilike(f"%{text}%"),
-        #             Contact.email.ilike(f"%{text}%"),
-        #             Contact.notes.ilike(f"%{text}%"),
-        #         )
-        #     )
-        #     .offset(skip)
-        #     .limit(limit)
-        # )
+
         result = await self.db.execute(req)
         return result.scalars().all()
 

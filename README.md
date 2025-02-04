@@ -1,19 +1,10 @@
-Implement an authentication mechanism in the application.
+Download the repository:
 
-Implement an authorization mechanism using JWT tokens so that all operations with contacts are performed only by registered users.
+##To start container
+docker-compose up -d
 
-A user should only have access to their own operations with contacts.
+##To start with DB
+alembic upgrade head
 
-Implement a mechanism to verify the registered user's email.
-
-Limit the number of requests to the user's /me route.
-
-Enable CORS for your REST API.
-
-Implement the ability to update the user's avatar (use the Cloudinary service).
-
-docker compose -d up
-
-alembic head
 ##tests
 poetry run pytest --cov=src tests/

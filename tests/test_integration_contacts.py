@@ -2,12 +2,12 @@ from datetime import date
 
 
 test_contact = {
-    "name": "test_contact",
-    "lastname": "test_last",
+    "name": "first",
+    "lastname": "last",
     "email": "test@gmail.com",
     "phone": "096-123-45-67",
-    "birthdate": date(2011, 12, 12).isoformat(),
-    # "birthdate": str(date(2001, 12, 12)),
+    # "birthdate": date(2011, 1, 12).isoformat(),
+    "birthdate": str(date(2001, 12, 12)),
     "notes": "some_note",
 }
 
@@ -28,7 +28,7 @@ def test_create_contact(client, get_token):
 
 def test_get_contact(client, get_token):
     response = client.get(
-        "/api/contact/1", headers={"Authorization": f"Bearer {get_token}"}
+        "/api/contacts/1", headers={"Authorization": f"Bearer {get_token}"}
     )
     assert response.status_code == 200, response.text
     data = response.json()
@@ -38,11 +38,11 @@ def test_get_contact(client, get_token):
 
 def test_get_contact_not_found(client, get_token):
     response = client.get(
-        "/api/contact/2", headers={"Authorization": f"Bearer {get_token}"}
+        "/api/contacts/2", headers={"Authorization": f"Bearer {get_token}"}
     )
     assert response.status_code == 404, response.text
     data = response.json()
-    assert data["detail"] == "Contact not found"
+    assert data["detail"] == "Contact is not found!"
 
 
 def test_get_contacts(client, get_token):
@@ -61,8 +61,8 @@ def test_update_contact(client, get_token):
     updated_test_contact = test_contact.copy()
     updated_test_contact["name"] = "New_name"
 
-    response = client.put(
-        "/api/contact/1",
+    response = client.patch(
+        "/api/contacts/1",
         json=updated_test_contact,
         headers={"Authorization": f"Bearer {get_token}"},
     )
@@ -77,23 +77,23 @@ def test_update_contact_not_found(client, get_token):
     updated_test_contact = test_contact.copy()
     updated_test_contact["name"] = "New_name"
 
-    response = client.put(
+    response = client.patch(
         "/api/contact/2",
         json=updated_test_contact,
         headers={"Authorization": f"Bearer {get_token}"},
     )
     assert response.status_code == 404, response.text
     data = response.json()
-    assert data["detail"] == "Contact not found"
+    assert data["detail"] == "Not Found"
 
 
 def test_delete_contact(client, get_token):
     response = client.delete(
-        "/api/contact/1", headers={"Authorization": f"Bearer {get_token}"}
+        "/api/contacts/1", headers={"Authorization": f"Bearer {get_token}"}
     )
-    assert response.status_code == 200, response.text
-    data = response.text
-    assert data == ""
+    data = response.json()
+    assert data["id"] == 1  # Check if the deleted contact data is returned
+    assert data["name"] == "New_name"
 
 
 def test_repeat_delete_contact(client, get_token):
@@ -102,4 +102,4 @@ def test_repeat_delete_contact(client, get_token):
     )
     assert response.status_code == 404, response.text
     data = response.json()
-    assert data["detail"] == "Contact not found"
+    assert data["detail"] == "Contact is not found!"

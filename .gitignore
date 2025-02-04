@@ -19,6 +19,7 @@ env/
 venv/
 ENV/
 
+
 # Alembic migration files
 migrations/
 
@@ -52,3 +53,12 @@ openapi.yaml
 # Other system files
 .DS_Store
 Thumbs.db
+
+.pytest_cache
+.pytest_cache/
+postgres-data/
+.postgres-data
+postgres-data
+.env 
+env
+test.db
