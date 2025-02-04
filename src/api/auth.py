@@ -169,6 +169,7 @@ async def new_token(request: TokenRefreshRequest, db: Session = Depends(get_db))
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired refresh token",
         )
+
     new_access_token = await create_access_token(data={"sub": user.username})
     return {
         "access_token": new_access_token,

@@ -244,6 +244,7 @@ async def verify_refresh_token(refresh_token: str, db: Session):
         payload = jwt.decode(
             refresh_token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
         )
+
         username: str = payload["sub"]
         token_type: str = payload.get("token_type")
         if username is None or token_type != "refresh":
@@ -251,10 +252,7 @@ async def verify_refresh_token(refresh_token: str, db: Session):
 
         user_service = UserService(db)
         user = await user_service.get_user_by_username(username)
-        stored_refresh_token = user.refresh_token
-        # stored_refresh_token = await user_service.get_users_token(username)
-
-        if stored_refresh_token != refresh_token:
+        if user is None:
             return None
 
         return user

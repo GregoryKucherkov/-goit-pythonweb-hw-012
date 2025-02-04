@@ -1,4 +1,7 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
+from src.services.email import send_email
+import asyncio
+from fastapi import Request
 
 import pytest
 from sqlalchemy import select
@@ -119,3 +122,24 @@ def test_validation_error_login(client):
     assert response.status_code == 422, response.text
     data = response.json()
     assert "detail" in data
+
+
+def test_refresh_token(client, get_refresh_token):
+    response = client.post(
+        "api/auth/refresh-token",
+        json={"refresh_token": get_refresh_token},
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert "access_token" in data
+    assert "token_type" in data
+    assert data["token_type"] == "bearer"
+
+
+def test_invalid_token_type(client, get_token):
+    response = client.post(
+        "/api/auth/refresh-token",
+        json={"refresh_token": get_token},
+    )
+    assert response.status_code == 401, response.text
+    assert "Invalid or expired refresh token" in response.json()["detail"]
