@@ -61,12 +61,7 @@ class ContactRepo:
         Returns:
             A Contact with the assigned attributes.
         """
-
-        if isinstance(user, PydentUser):  # If it's a dict (from cache)
-            user_repo = UserRepo(self.db)
-            user = await user_repo.get_user_by_email(user.email)
-
-        contact = Contact(**body.model_dump(exclude_unset=True), user=user)
+        contact = Contact(**body.model_dump(exclude_unset=True), user_id=user.id)
 
         self.db.add(contact)
         await self.db.commit()

@@ -1,6 +1,47 @@
 from unittest.mock import patch
+import pytest
+from sqlalchemy.ext.asyncio import AsyncSession
+from unittest.mock import AsyncMock, MagicMock
+from fastapi import FastAPI
+from src.database.models import Contact, User
+
+app = FastAPI()
 
 from conftest import test_user
+from fastapi.testclient import TestClient
+from src.database.models import UserRole
+
+
+@pytest.fixture
+def mock_session():
+    mock_session = AsyncMock(spec=AsyncSession)
+    return mock_session
+
+
+@pytest.fixture
+def mock_user():
+    return User(
+        id=4,
+        username=test_user["username"],
+        email=test_user["email"],
+        hashed_password="hash_password",
+        confirmed=True,
+        avatar="<https://twitter.com/gravatar>",
+        role=UserRole.USER,
+    )
+
+
+@pytest.fixture
+def mock_admin_user():
+    return User(
+        id=4,
+        username=test_user["username"],
+        email=test_user["email"],
+        hashed_password="hash_password",
+        confirmed=True,
+        avatar="<https://twitter.com/gravatar>",
+        role=UserRole.ADMIN,
+    )
 
 
 def test_get_me(client, get_token):

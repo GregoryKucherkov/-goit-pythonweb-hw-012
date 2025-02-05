@@ -79,6 +79,8 @@ async def create_token(
     """
     to_encode = data.copy()
     now = datetime.now(UTC)
+    if expires_delta is None:
+        expires_delta = timedelta(hours=1)
     expire = now + expires_delta
     to_encode.update({"exp": expire, "iat": now, "token_type": token_type})
     encode_jwt = jwt.encode(
@@ -207,12 +209,12 @@ async def get_curent_user(
     except JWTError as e:
         raise credentials_exception
 
-    # user_cached = r.get(f"user:{username}")
-    # if user_cached:
-    #     # If user is cached, load from cache and convert to User object
-    #     user_data = json.loads(user_cached)
-    #     return User(**user_data)  # User object
-    # return json.loads(user_cached)
+    user_cached = r.get(f"user:{username}")
+    if user_cached:
+        # If user is cached, load from cache and convert to User object
+        user_data = json.loads(user_cached)
+        user_alc = UserSQLAlchemy(**user_data)
+        return user_alc
 
     user_service = UserService(db)
 

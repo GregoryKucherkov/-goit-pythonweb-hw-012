@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from src.database.models import User
 from tests.conftest import TestingSessionLocal
+from fastapi import HTTPException
 
 
 user_data = {
@@ -77,6 +78,9 @@ async def test_login(client):
         if current_user:
             current_user.confirmed = True
             await session.commit()
+
+    if current_user and not current_user.confirmed:
+        raise HTTPException(status_code=401, detail="User is not confirmed")
 
     response = client.post(
         "api/auth/login",
